@@ -11,3 +11,6 @@ lib/
 Practice/**
 delete*
 CourseNotes
+*.out
+**/.vscode/**
+.vscode/**
