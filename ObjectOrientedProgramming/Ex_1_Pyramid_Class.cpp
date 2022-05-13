@@ -35,7 +35,7 @@ void Pyramid::SetWidth(const double width) { Pyramid::SetWidth_(width); };
 void Pyramid::SetHeight(const double height) { Pyramid::SetHeigth_(height); };
 
 double Pyramid::GetVolume() const {
-  return Pyramid::length_ * Pyramid::width_ * Pyramid::height_ / 3;
+  return Pyramid::length_ * Pyramid::width_ * Pyramid::height_ / 3.;
 };
 
 double Pyramid::GetSurfaceArea() const {
@@ -124,6 +124,7 @@ label:
 
 int main() {
   Pyramid p1(10, 16, 32);
-  cout << p1.GetSurfaceArea() << "\n";
+  cout << p1.GetSurfaceArea() << "\n";  // Answer should be 1008.06
+  cout << p1.GetVolume() << "\n";       // Answer should be 1008.06
   return 0;
 }
