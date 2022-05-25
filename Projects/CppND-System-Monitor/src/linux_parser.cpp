@@ -111,8 +111,8 @@ float LinuxParser::MemoryUtilization() {
 };
 
 long LinuxParser::UpTime() {
-  long double uptime = 0;
-  long double idltime = 0;
+  long uptime = 0;
+  long idltime = 0;
   std::ifstream fs(kProcDirectory + kUptimeFilename);
   if (fs.is_open()) {
     fs >> uptime >> idltime;
@@ -177,12 +177,17 @@ long LinuxParser::ActiveJiffies(const string cpu_n) {
 
   int y_i = find_elem_index(CPUS, cpu_n);
   vector<long> ActVecc = (*cpu_utilz)[y_i];
+
   long ActJif = 0;
-  for (const long& i : ActVecc) {
-    if (LinuxParser::kIdle_ == 3) continue;
-    if (LinuxParser::kIOwait_ == 4) continue;
-    ActJif += i;
-  }
+
+  for (auto i = 0; i < ActVecc.size(); i++) {
+    if (LinuxParser::kIdle_ == i) continue;
+    if (LinuxParser::kIOwait_ == i) continue;
+    ActJif += ActVecc[i];
+  };
+
+  delete[] cpu_utilz;
+  delete[] CPUS;
   return ActJif;
 }
 
@@ -194,7 +199,10 @@ long LinuxParser::IdleJiffies(string cpu_n) {
 
   int y_i = find_elem_index(CPUS, cpu_n);
   vector<long> ActJifVec = (*cpu_utilz)[y_i];
-  return ActJifVec[kIdle_];
+  long idle_jiffi = ActJifVec[kIdle_] + ActJifVec[kIOwait_];
+  delete[] cpu_utilz;
+  delete[] CPUS;
+  return idle_jiffi;
 }
 
 //#############################
@@ -229,7 +237,8 @@ void LinuxParser::CpuUtilization(vector<vector<long>>* cpu_utilz,
 };
 
 long LinuxParser::ActiveJiffies(int pid) {
-  string utime, stime, cutime, cstime, line;
+  string utime, stime, cutime, cstime;
+  string line;
 
   std::ifstream ifs(kProcDirectory + "/" + std::to_string(pid) + kStatFilename);
   if (ifs.is_open()) {

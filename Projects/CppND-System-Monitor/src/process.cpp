@@ -17,10 +17,11 @@ using std::vector;
 int Process::Pid() { return Process::pid_; };
 
 // TODO: Return this process's CPU utilization
-double Process::CpuUtilization() const {
-  double Process_acti =
-      (double)LinuxParser::ActiveJiffies(Process::pid_) / sysconf(_SC_CLK_TCK);
-  double Processor_start = LinuxParser::UpTime(Process::pid_);
+long double Process::CpuUtilization() const {
+  long double Process_acti =
+      (long double)LinuxParser::ActiveJiffies(Process::pid_) /
+      sysconf(_SC_CLK_TCK);
+  long Processor_start = LinuxParser::UpTime(Process::pid_);
   return (Process_acti) / Processor_start;
 };
 
@@ -34,7 +35,7 @@ string Process::Ram() { return LinuxParser::Ram(Process::pid_); }
 string Process::User() { return LinuxParser::User(Process::pid_); }
 
 // TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return LinuxParser::UpTime(Process::pid_); }
+long Process::UpTime() { return LinuxParser::UpTime(Process::pid_); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
@@ -43,4 +44,4 @@ bool Process::operator<(Process const& a) const {
     return true;
   else
     return false;
-}
+};

@@ -24,9 +24,9 @@ format. cpp for formatting the uptime.*/
 
 // TODO: Return the system's CPU
 Processor& System::Cpu() {
-  cpu_ = Processor();
+  System::cpu_ = Processor();
 
-  return cpu_;
+  return System::cpu_;
 }
 
 // TODO: Return a container composed of the system's processes
@@ -34,7 +34,8 @@ vector<Process>& System::Processes() {
   vector<int> pids = LinuxParser::Pids();
 
   for (auto i : pids) {
-    System::processes_.emplace_back(Process(i));
+    Process process(i);
+    this->processes_.push_back(process);
   };
   return this->processes_;
 }
@@ -53,4 +54,4 @@ int System::RunningProcesses() { return LinuxParser::RunningProcesses(); }
 int System::TotalProcesses() { return LinuxParser::TotalProcesses(); }
 
 // TODO: Return the number of seconds since the system started running
-long int System::UpTime() { return LinuxParser::UpTime(); }
+long System::UpTime() { return LinuxParser::UpTime(); }
