@@ -22,7 +22,7 @@ long double Process::CpuUtilization() const {
       (long double)LinuxParser::ActiveJiffies(Process::pid_) /
       sysconf(_SC_CLK_TCK);
   long Processor_start = LinuxParser::UpTime(Process::pid_);
-  return (Process_acti) / Processor_start;
+  return (long double)((Process_acti) / Processor_start);
 };
 
 // TODO: Return the command that generated this process

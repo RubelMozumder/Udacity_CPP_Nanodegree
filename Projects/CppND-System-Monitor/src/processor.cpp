@@ -6,8 +6,8 @@
 float Processor::Utilization() {
   Processor::Idle = LinuxParser::IdleJiffies("cpu");
   Processor::NonIdle = LinuxParser::ActiveJiffies("cpu");
-  long Tot = Processor::Idle + Processor::NonIdle;
-  long Prevtot = Processor::PrevIdle + Processor::PrevNonIdle;
+  float Tot = Processor::Idle + Processor::NonIdle;
+  float Prevtot = Processor::PrevIdle + Processor::PrevNonIdle;
 
   this->PrevIdle = this->Idle;
   this->PrevNonIdle = this->NonIdle;

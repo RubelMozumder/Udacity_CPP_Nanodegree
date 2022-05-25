@@ -84,8 +84,8 @@ float LinuxParser::MemoryUtilization() {
   string key;
   long int value;
   string unit;
-  long int tot_mem = 0;
-  long int free_mem = 0;
+  float tot_mem = 0;
+  float free_mem = 0;
   int stop_iter = 2;
 
   std::ifstream fs(kProcDirectory + kMeminfoFilename);
@@ -95,19 +95,19 @@ float LinuxParser::MemoryUtilization() {
         break;
       };
 
-      if (key == "MemTotal") {
+      if (key == "MemTotal:") {
         tot_mem = value;
         stop_iter--;
       };
 
-      if (key == "MemFree") {
+      if (key == "MemFree:") {
         free_mem = value;
         stop_iter--;
       };
     }
   }
 
-  return (free_mem / (float)tot_mem);
+  return (free_mem / tot_mem);
 };
 
 long LinuxParser::UpTime() {
