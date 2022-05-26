@@ -14,3 +14,4 @@ CourseNotes
 *.out
 **/.vscode/**
 .vscode/**
+*.sock
