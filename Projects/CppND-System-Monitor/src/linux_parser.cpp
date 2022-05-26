@@ -186,8 +186,8 @@ long LinuxParser::ActiveJiffies(const string cpu_n) {
     ActJif += ActVecc[i];
   };
 
-  delete[] cpu_utilz;
-  delete[] CPUS;
+  delete cpu_utilz;
+  delete CPUS;
   return ActJif;
 }
 
@@ -200,8 +200,8 @@ long LinuxParser::IdleJiffies(string cpu_n) {
   int y_i = find_elem_index(CPUS, cpu_n);
   vector<long> ActJifVec = (*cpu_utilz)[y_i];
   long idle_jiffi = ActJifVec[kIdle_] + ActJifVec[kIOwait_];
-  delete[] cpu_utilz;
-  delete[] CPUS;
+  delete cpu_utilz;
+  delete CPUS;
   return idle_jiffi;
 }
 
