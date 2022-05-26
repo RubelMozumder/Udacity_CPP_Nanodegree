@@ -46,7 +46,6 @@ enum CPUStates {
   kGuestNice_
 };
 
-//###########################################
 void CpuUtilization(vector<vector<long>>* cpu_utilz, vector<string>* CPUS);
 long Jiffies();
 long ActiveJiffies(const string cpu_);

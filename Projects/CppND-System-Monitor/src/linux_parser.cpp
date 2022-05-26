@@ -14,7 +14,6 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-//###############################
 template <typename T1, typename T2>
 int find_elem_index(const T2* vec, const T1& elem) {
   int ind = 0;
@@ -169,7 +168,6 @@ long LinuxParser::Jiffies() {
   return (long int)(UpTime() * tick_p_sc);
 }
 
-//#######################################
 long LinuxParser::ActiveJiffies(const string cpu_n) {
   vector<vector<long>>* cpu_utilz = new vector<vector<long>>{};
   vector<string>* CPUS = new vector<string>{};
@@ -191,7 +189,6 @@ long LinuxParser::ActiveJiffies(const string cpu_n) {
   return ActJif;
 }
 
-//###################################################
 long LinuxParser::IdleJiffies(string cpu_n) {
   vector<vector<long>>* cpu_utilz = new vector<vector<long>>{};
   vector<string>* CPUS = new vector<string>{};
@@ -205,7 +202,6 @@ long LinuxParser::IdleJiffies(string cpu_n) {
   return idle_jiffi;
 }
 
-//#############################
 void LinuxParser::CpuUtilization(vector<vector<long>>* cpu_utilz,
                                  vector<string>* CPUS) {
   string cpu{""}, line;
