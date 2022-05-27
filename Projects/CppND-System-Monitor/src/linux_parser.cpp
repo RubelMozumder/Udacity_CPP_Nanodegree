@@ -178,7 +178,7 @@ long LinuxParser::ActiveJiffies(const string cpu_n) {
 
   long ActJif = 0;
 
-  for (auto i = 0; i < ActVecc.size(); i++) {
+  for (size_t i = 0; i < ActVecc.size(); i++) {
     if (LinuxParser::kIdle_ == i) continue;
     if (LinuxParser::kIOwait_ == i) continue;
     ActJif += ActVecc[i];
@@ -277,15 +277,16 @@ string LinuxParser::Ram(int pid) {
   if (ifs.is_open()) {
     while (std::getline(ifs, line)) {
       std::istringstream ils(line);
-      ils >> key;
+      ils >> key >> value >> nul;
       if (key == srch_key) {
-        ils >> value;
-        ils >> nul;
         break;
       };
     };
   }
-  return value;
+  // KB to MB
+  long val = std::stol(value) / 1000;
+
+  return to_string(val);
 }
 
 string LinuxParser::Uid(int pid) {
@@ -350,5 +351,5 @@ long LinuxParser::UpTime(int pid) {
     };
   };
 
-  return std::stoi(uptime);
+  return std::stol(uptime);
 };
