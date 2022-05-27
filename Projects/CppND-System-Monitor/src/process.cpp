@@ -13,7 +13,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-int Process::Pid() { return Process::pid_; };
+int Process::Pid() const { return Process::pid_; };
 
 long double Process::CpuUtilization() const {
   long double Process_acti =
@@ -32,8 +32,5 @@ string Process::User() { return LinuxParser::User(Process::pid_); }
 long Process::UpTime() { return LinuxParser::UpTime(Process::pid_); }
 
 bool Process::operator<(Process const& a) const {
-  if (Process::CpuUtilization() < a.CpuUtilization())
-    return true;
-  else
-    return false;
+  return (Process::CpuUtilization() < a.CpuUtilization());
 };

@@ -6,10 +6,10 @@ class Processor {
   float Utilization();
 
  private:
-  float PrevIdle{0};
-  float PrevNonIdle{0};
-  float Idle{0};
-  float NonIdle{0};
+  long PrevIdle{0};
+  long PrevNonIdle{0};
+  long Idle{0};
+  long NonIdle{0};
 };
 
 #endif
