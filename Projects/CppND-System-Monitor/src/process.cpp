@@ -15,12 +15,14 @@ using std::vector;
 
 int Process::Pid() const { return Process::pid_; };
 
-long double Process::CpuUtilization() const {
-  long double Process_acti =
-      (long double)LinuxParser::ActiveJiffies(Process::pid_) /
-      sysconf(_SC_CLK_TCK);
-  long Processor_start = LinuxParser::UpTime(Process::pid_);
-  return (long double)((Process_acti) / Processor_start);
+float Process::CpuUtilization() const {
+  int jiffies = sysconf(_SC_CLK_TCK);
+  // Process_acti in Second
+  float Process_acti = (LinuxParser::ActiveJiffies(Process::pid_) / jiffies);
+  float Process_start = LinuxParser::UpTime(Process::pid_) / jiffies;
+  long Processor_start = LinuxParser::UpTime();
+  long time_inter = (Processor_start - Process_start);
+  return (float)(Process_acti / (time_inter * 1.0));
 };
 
 string Process::Command() { return LinuxParser::Command(Process::pid_); }

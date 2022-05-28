@@ -81,10 +81,10 @@ vector<int> LinuxParser::Pids() {
 
 float LinuxParser::MemoryUtilization() {
   string key;
-  long int value;
+  float value;
   string unit;
-  float tot_mem = 0;
-  float free_mem = 0;
+  float tot_mem = 0;   // = 0;
+  float free_mem = 0;  // = 0;
   int stop_iter = 2;
 
   std::ifstream fs(kProcDirectory + kMeminfoFilename);
@@ -106,7 +106,7 @@ float LinuxParser::MemoryUtilization() {
     }
   }
 
-  return (free_mem / tot_mem);
+  return (tot_mem - free_mem) / tot_mem;
 };
 
 long LinuxParser::UpTime() {
@@ -233,6 +233,7 @@ void LinuxParser::CpuUtilization(vector<vector<long>>* cpu_utilz,
 };
 
 long LinuxParser::ActiveJiffies(int pid) {
+  // utime, stime, cutime, cstime in jiffies
   string utime, stime, cutime, cstime;
   string line;
 
@@ -256,13 +257,15 @@ long LinuxParser::ActiveJiffies(int pid) {
 
 string LinuxParser::Command(int pid) {
   string line;
-
+  string Command;
   std::ifstream ifs(kProcDirectory + "/" + std::to_string(pid) +
                     kCmdlineFilename);
   if (ifs.is_open()) {
     std::getline(ifs, line);
+    std::istringstream ils(line);
+    ils >> Command;
   };
-  return line;
+  return Command;
 }
 
 string LinuxParser::Ram(int pid) {
@@ -309,7 +312,7 @@ string LinuxParser::Uid(int pid) {
     };
   }
   return value;
-}
+};
 
 string LinuxParser::User(int pid) {
   string uid, user;
@@ -345,11 +348,11 @@ long LinuxParser::UpTime(int pid) {
 
       int count = 0;
       while (count < 22) {
-        ils >> uptime;
+        if (count == 21) ils >> uptime;
         count++;
       };
     };
   };
-
+  // In second
   return std::stol(uptime);
 };
