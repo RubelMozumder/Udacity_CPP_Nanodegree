@@ -17,7 +17,7 @@ using std::string;
 using std::vector;
 
 Processor& System::Cpu() {
-  System::cpu_ = Processor();
+  // System::cpu_ = Processor();
 
   return System::cpu_;
 }
