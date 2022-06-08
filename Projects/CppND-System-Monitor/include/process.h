@@ -7,14 +7,15 @@
 
 class Process {
  public:
-  Process(int pid) : pid_(pid){};
+  Process(int pid);
   std::string User();
   std::string Command();
   int Pid() const;
   float CpuUtilization() const;
+  // float GetCpuUtilization();
   std::string Ram();
   long UpTime();
-  bool operator<(Process const& a) const;
+  bool operator>(Process const& a) const;
 
  private:
   int pid_;

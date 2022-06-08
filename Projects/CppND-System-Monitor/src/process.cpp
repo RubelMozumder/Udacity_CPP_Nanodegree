@@ -13,17 +13,24 @@ using std::string;
 using std::to_string;
 using std::vector;
 
+Process::Process(int pid) {
+  this->pid_ = pid;
+  // this->CPUUtils = this->CpuUtilization();
+};
+
 int Process::Pid() const { return Process::pid_; };
 
 float Process::CpuUtilization() const {
-  int jiffies = sysconf(_SC_CLK_TCK);
-  // Process_acti in Second
-  float Process_acti = (LinuxParser::ActiveJiffies(Process::pid_) / jiffies);
-  float Process_start = LinuxParser::UpTime(Process::pid_) / jiffies;
-  long Processor_start = LinuxParser::UpTime();
-  long time_inter = (Processor_start - Process_start);
-  return (float)(Process_acti / (time_inter * 1.0));
+  int user_hz = sysconf(_SC_CLK_TCK);
+  // Process_acti in user_hz
+  long PIDActi = LinuxParser::ActiveJiffies(Process::pid_);
+  long Sysup = LinuxParser::UpTime() * user_hz;
+  long ProcStart = LinuxParser::UpTime(Process::pid_) * user_hz;
+  float cpu_util = (float)(PIDActi / (Sysup - ProcStart));
+  return cpu_util;
 };
+
+// float Process::GetCpuUtilization() { return this->CPUUtils; }
 
 string Process::Command() { return LinuxParser::Command(Process::pid_); }
 
@@ -33,6 +40,6 @@ string Process::User() { return LinuxParser::User(Process::pid_); }
 
 long Process::UpTime() { return LinuxParser::UpTime(Process::pid_); }
 
-bool Process::operator<(Process const& a) const {
-  return (Process::CpuUtilization() < a.CpuUtilization());
+bool Process::operator>(Process const& a) const {
+  return (Process::CpuUtilization() > a.CpuUtilization());
 };
