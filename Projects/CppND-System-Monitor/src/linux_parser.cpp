@@ -126,7 +126,7 @@ long LinuxParser::UpTime() {
     }
   };
   // uptime values in seconds
-  return (std::stol(uptime) + std::stol(idltime));
+  return (std::stol(uptime));
 }
 
 int LinuxParser::TotalProcesses() {
@@ -271,7 +271,7 @@ long LinuxParser::ActiveJiffies(int pid) {
       std::istringstream ils(line);
 
       int count = 0;
-      while (count < 14) {
+      while (count < 13) {
         ils >> utime;
         count++;
       };
@@ -376,7 +376,7 @@ long LinuxParser::UpTime(int pid) {
       std::istringstream ils(line);
 
       int count = 0;
-      while (count < 22) {
+      while (count < 21) {
         ils >> uptime;
         count++;
       };
