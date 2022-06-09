@@ -271,7 +271,7 @@ long LinuxParser::ActiveJiffies(int pid) {
       std::istringstream ils(line);
 
       int count = 0;
-      while (count < 13) {
+      while (count < 14) {
         ils >> utime;
         count++;
       };
@@ -376,7 +376,7 @@ long LinuxParser::UpTime(int pid) {
       std::istringstream ils(line);
 
       int count = 0;
-      while (count < 21) {
+      while (count < 22) {
         ils >> uptime;
         count++;
       };
