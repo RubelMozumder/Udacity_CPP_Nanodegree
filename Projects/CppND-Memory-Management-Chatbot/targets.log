@@ -1,0 +1,3 @@
+Makefile all -f /home/rubel/Programing/CPP/Udacity_CPP_Nanodegree/Projects/CppND-System-Monitor/ --print-data-base --no-builtin-variables --no-builtin-rules --question
+/bin/sh: 1: Makefile: not found
+
