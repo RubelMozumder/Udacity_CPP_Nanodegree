@@ -1,6 +1,7 @@
 #ifndef CHATLOGIC_H_
 #define CHATLOGIC_H_
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -17,7 +18,7 @@ class ChatLogic {
   ////
 
   // data handles (owned)
-  std::vector<GraphNode *> _nodes;
+  std::vector<std::unique_ptr<GraphNode>> _nodes;
   std::vector<GraphEdge *> _edges;
   // int _count = 0;
   ////
