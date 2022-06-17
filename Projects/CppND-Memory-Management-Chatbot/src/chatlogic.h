@@ -19,8 +19,14 @@ class ChatLogic {
 
   // data handles (owned)
   std::vector<std::unique_ptr<GraphNode>> _nodes;
+
+  /* TODO: Make invalid the vector of edges here as
+  it will be owned by each graphnode in GraphNode.cpp
+
+  write also ChatLogic destractor for deleting the vector of edges edges
+  */
+
   std::vector<GraphEdge *> _edges;
-  // int _count = 0;
   ////
   //// EOF STUDENT CODE
 
