@@ -1,5 +1,7 @@
 #include "chatbot.h"
 
+#include <wx/wx.h>
+
 #include <algorithm>
 #include <ctime>
 #include <iostream>
@@ -33,27 +35,28 @@ ChatBot::ChatBot(const ChatBot &chatbot) {  // Copy Constructor
   std::cout << "ChatBot Copy Constructor" << std::endl;
 
   // Access to the data handles
-  *(this->_image) = *(chatbot._image);
-  *(this->_chatLogic) = *(chatbot._chatLogic);
-  *(this->_rootNode) = *(chatbot._rootNode);
+  this->_image = new wxBitmap(*chatbot._image);
+  this->_chatLogic = chatbot._chatLogic;
+  this->_rootNode = chatbot._rootNode;
   //_count++;
 };
 
-ChatBot &ChatBot::operator=(ChatBot &chatbot) {  // Copy assignment
+ChatBot &ChatBot::operator=(ChatBot &chatbot) {  // Copy Assignment
   std::cout << "ChatBot Copy assignment " << std::endl;
 
   if (this == &chatbot) {
     return *this;
   } else {
     // Access to the data handles
-    *(this->_image) = *(chatbot._image);
-    *(this->_chatLogic) = *(chatbot._chatLogic);
-    *(this->_rootNode) = *(chatbot._rootNode);
+    this->_image = new wxBitmap(*chatbot._image);
+    this->_chatLogic = chatbot._chatLogic;
+    this->_rootNode = chatbot._rootNode;
     //_count++;
     return *this;
   }
 };
-ChatBot::ChatBot(ChatBot &&chatbot) {  // move Constructor
+
+ChatBot::ChatBot(ChatBot &&chatbot) {  // Move Constructor
   std::cout << "ChatBot move Constructor" << std::endl;
 
   // Access to the data handles
