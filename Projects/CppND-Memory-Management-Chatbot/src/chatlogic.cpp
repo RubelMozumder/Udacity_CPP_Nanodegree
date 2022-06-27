@@ -44,9 +44,10 @@ ChatLogic::~ChatLogic() {
 
   // delete all edges
   // TODO: No need it here as will be implemeted in the GraphNode.cpp
-  for (auto it = std::begin(_edges); it != std::end(_edges); ++it) {
+  /*for (auto it = std::begin(_edges); it != std::end(_edges); ++it) {
     delete *it;
   }
+  */
   //}
 
   ////
@@ -102,7 +103,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename) {
 
           // add token to vector
           tokens.push_back(std::make_pair(tokenType, tokenInfo));
-        }
+        };
 
         // remove token from current line
         lineStr = lineStr.substr(posTokenBack + 1, lineStr.size());
@@ -232,7 +233,11 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename) {
   // add chatbot to graph root node
   _chatBot->SetRootNode(rootNode);
   rootNode->MoveChatbotHere(_chatBot);
+  /*
+      ChatBot *local_chatbot = new ChatBot();
 
+    rootNode->_chatBot = std::move(local_chatbot);
+  */
   ////
   //// EOF STUDENT CODE
 }
