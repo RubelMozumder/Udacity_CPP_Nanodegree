@@ -1,4 +1,5 @@
 #include <complex>
+#include <future>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -52,7 +53,7 @@ void MandelBrot<T>::resetMandelBrotParameters(T realBoundary, T imgBoundary,
 };
 
 template <class T>
-int MandelBrot<T>::searchMandelBrotSetPoint(std::complex<T> &c) {
+int MandelBrot<T>::searchMandelBrotSetPoint(std::complex<T> c) {
   int iter = 0;
   std::complex<T> Zn(0, 0);
   std::complex<T> Zn1;
@@ -69,22 +70,35 @@ int MandelBrot<T>::searchMandelBrotSetPoint(std::complex<T> &c) {
 };
 
 template <class T>
-void MandelBrot<T>::constructMandelBrot() {
+void MandelBrot<T>::constructMandelBrotSync() {
   for (MandelData<T, int> &mandelData : MandelBrot<T>::_pointSpace) {
     int iterNumberWithComlxC = searchMandelBrotSetPoint(mandelData.comPoint);
     mandelData.iterNumber = iterNumberWithComlxC;
   }
 };
 template <class T>
-void MandelBrot<T>::constructMandelBrotConcurrent() {
+void MandelBrot<T>::constructMandelBrot() {
   std::vector<std::future<int>> ftrs;
-
-  for (MandelData<T, int> &mandelData : MandelBrot<T>::_pointSpace) {
-    ftrs.emplace_back
-
-        int iterNumberWithComlxC searchMandelBrotSetPoint(mandelData.comPoint);
-    mandelData.iterNumber = iterNumberWithComlxC;
+  // TODO: Try and check what happens when we use `&mandelData`
+  // instead of `mandelData`
+  {
+    std::lock_guard<std::mutex> mlock(MandelBrot<T>::_mandelMtx);
+    for (MandelData<T, int> mandelData : MandelBrot<T>::_pointSpace) {
+      ftrs.emplace_back(std::async(std::launch::deferred,
+                                   &MandelBrot<T>::searchMandelBrotSetPoint,
+                                   this, mandelData.comPoint));
+    };
   }
+
+  for (auto &ftr : ftrs) {
+    ftr.wait();
+  };
+  {
+    std::lock_guard<std::mutex> mlock(MandelBrot<T>::_mandelMtx);
+    for (std::size_t i = 0; i < ftrs.size(); i++) {
+      MandelBrot<T>::_pointSpace[i].iterNumber = ftrs[i].get();
+    }
+  };
 };
 
 template <class T>

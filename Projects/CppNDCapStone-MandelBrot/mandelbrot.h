@@ -24,9 +24,9 @@ class MandelBrot {
   void resetMandelBrotParameters(T realBoundary, T imgBoundary,
                                  int realGridNumber, int imgGridNumber,
                                  int maxIter);
-  int searchMandelBrotSetPoint(std::complex<T> &c);
+  int searchMandelBrotSetPoint(std::complex<T> c);
+  void constructMandelBrotSync();
   void constructMandelBrot();
-  void constructMandelBrotConcurrent();
   void checkDataPoints();
 
   // private:
@@ -39,7 +39,7 @@ class MandelBrot {
   T _realGridSize;
   T _imgGridSize;
   int _maxIter;
-  std::mutex mandelMtx;
+  std::mutex _mandelMtx;
 };
 #include "mandelbrot_empl.h"
 
