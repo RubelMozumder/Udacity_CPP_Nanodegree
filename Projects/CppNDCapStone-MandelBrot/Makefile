@@ -21,8 +21,8 @@ LDFLAGS = $(SDL_LIB)
 ## by the :XY1:.
 
 # OBJS = MandelBrot.o delete_2.o
-OBJS = delete_2.o
-EXE = SDL_Lesson0
+OBJS = main.o screen_mandelbrot.o 
+EXE = delete_SDL_Lesson0
 
 all: $(EXE)
 
@@ -32,12 +32,15 @@ $(EXE): $(OBJS)
 ## :XY1:
 # mandelbrot.o: mandelbrot.cpp mandelbrot.h
 #	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+screen_mandelbrot.o: screen_mandelbrot.cpp mandelbrot.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 	
 #g++ -c file_name is used to only compile and assemble the file_name and not link the object code to produce executable file. 
 #It will generate a file_name.o object code file in present working directory.
 
 
-delete_2.o: delete_2.cpp mandelbrot.h
+main.o: main.cpp screen_mandelbrot.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 #g++ -c file_name is used to only compile and assemble the file_name and not link the object code to produce executable file. 
 #It will generate a file_name.o object code file in present working directory.

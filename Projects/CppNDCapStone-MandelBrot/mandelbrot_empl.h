@@ -1,11 +1,20 @@
+#include <SDL2/SDL.h>
+#include <math.h>
+
 #include <complex>
 #include <future>
+#include <iostream>
 #include <mutex>
 #include <thread>
 #include <vector>
 
 #include "mandelbrot.h"
 
+// Default constructor
+template <class T>
+MandelBrot<T>::MandelBrot(){};
+
+// constructor
 template <class T>
 MandelBrot<T>::MandelBrot(T realBoundary, T imgBoundary, int realGridNumber,
                           int imgGridNumber, int maxIter) {
@@ -16,6 +25,41 @@ MandelBrot<T>::MandelBrot(T realBoundary, T imgBoundary, int realGridNumber,
   _maxIter = maxIter;
   // add data validation for given data;
   constructComplexSpace();
+  _isInitialised = true;
+};
+
+// Copy constructor
+template <class T>
+MandelBrot<T>::MandelBrot(const MandelBrot<T> &mandelbrot_) {
+  this->_realBoundary = mandelbrot_._realBoundary;
+  this->_imgBoundary = mandelbrot_._imgBoundary;
+  this->_realGridNumber = mandelbrot_._realGridNumber;
+  this->_imgGridNumber = mandelbrot_._imgGridNumber;
+  this->_maxIter = mandelbrot_._maxIter;
+  this->_isInitialised = mandelbrot_._isInitialised;
+  this->constructComplexSpace();
+};
+
+// Copy Assignment operator
+template <class T>
+MandelBrot<T> &MandelBrot<T>::operator=(const MandelBrot<T> &source_obj) {
+  // Copy assignment operator
+  std::cout << "Debug: Assigning content of instance " << &source_obj
+            << " to instance " << this << "\n";
+  if (this == &source_obj) {
+    return *this;
+  }
+
+  this->_realBoundary = source_obj._realBoundary;
+  this->_imgBoundary = source_obj._imgBoundary;
+  this->_realGridNumber = source_obj._realGridNumber;
+  this->_imgGridNumber = source_obj._imgGridNumber;
+  this->_maxIter = source_obj._maxIter;
+  this->_isInitialised = source_obj._isInitialised;
+
+  this->constructComplexSpace();
+
+  return *this;
 };
 
 template <class T>
@@ -50,6 +94,7 @@ void MandelBrot<T>::resetMandelBrotParameters(T realBoundary, T imgBoundary,
   _maxIter = maxIter;
   // add data validation for given data;
   constructComplexSpace();
+  _isInitialised = true;
 };
 
 template <class T>
@@ -109,3 +154,62 @@ void MandelBrot<T>::checkDataPoints() {
               << " iter : " << mandelData.iterNumber << "\n";
   };
 }
+
+template <class T>
+void MandelBrot<T>::runMandelBrotSimulation() {
+  MandelBrot<T>::constructComplexSpace();
+  MandelBrot<T>::constructMandelBrot();
+};
+
+template <class T>
+std::shared_ptr<Uint32[]> MandelBrot<T>::getScreenBuffer() {
+  int buffer_size =
+      MandelBrot<T>::_imgGridNumber * MandelBrot<T>::_realGridNumber;
+  Uint32 *buf = new Uint32[buffer_size];
+  int iterMax = MandelBrot<T>::_maxIter;
+  double colrUnit = 255.0 / iterMax;
+  int iter;
+  unsigned int pixCol;
+  int green_sharp = 1;
+  int color_scale;
+
+  // Color distribution of colr: 0<x<1
+  //==================================
+  // TODO: edit the formula
+  // Color = R * 1 + G * (exp(1/a(1/2 - x)**2)) / exp(1)  + B (1-x)
+  // G = R = B = 255, height value of G, R and B.
+
+  for (int i = 0; i < buffer_size; i++) {
+    // Here Converting the iteration for Mandel Set to 0
+    // out of Mandel Set with high number
+    iter = std::abs(MandelBrot<T>::_pointSpace[i].iterNumber - iterMax);
+
+    // 0 <= color_scale <= 255;
+    color_scale = (int)(iter * colrUnit);
+    int green = std::exp(-1 * std::pow((0.5 - color_scale), 2) * green_sharp);
+    int red = (int)color_scale;
+    int blue = (1 - color_scale) * 0.5;
+
+    pixCol = 0;
+
+    pixCol += red;
+    pixCol <<= 8;
+
+    pixCol += green;
+    pixCol <<= 8;
+
+    pixCol += blue;
+    pixCol <<= 8;
+
+    const unsigned char alpha = 255;
+    pixCol += alpha;
+    buf[i] = pixCol;
+  };
+
+  {
+    std::lock_guard<std::mutex> locLock(MandelBrot<T>::_mandelMtx);
+    MandelBrot<T>::_buffer.reset(buf);
+    buf = NULL;
+  }
+  return MandelBrot<T>::_buffer;
+};
