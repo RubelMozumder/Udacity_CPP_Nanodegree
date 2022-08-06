@@ -22,7 +22,7 @@ LDFLAGS = $(SDL_LIB)
 
 # OBJS = MandelBrot.o delete_2.o
 OBJS = main.o screen_mandelbrot.o 
-EXE = delete_SDL_Lesson0
+EXE = MandelBrot
 
 all: $(EXE)
 
